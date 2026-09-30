@@ -3,6 +3,7 @@
 package axi_agent_pkg;
 	`include "uvm_macros.svh"
 	import uvm_pkg::*;
+	import axi_param_pkg::*;
 	`include "../seq_lib/axi_sequence_item.sv"
 	`include "../seq_lib/axi_base_sequence.sv"
 	`include "../seq_lib/axi_sequencer.sv"

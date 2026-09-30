@@ -13,7 +13,9 @@ Time Resolution for simulation is 1ps
 Compiling package uvm.uvm_pkg
 Compiling package std.std
 Compiling package work.axi_agent_pkg
+Compiling package work.axi_param_pkg
 Compiling package work.axi_test_pkg
 Compiling package work.axi_env_pkg
+Compiling module work.axi_if_default
 Compiling module work.axi_tb_top
 Built simulation snapshot axi_tb_top_snap

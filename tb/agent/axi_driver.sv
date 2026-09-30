@@ -1,4 +1,5 @@
 class axi_driver extends uvm_driver#(axi_seq_item);
+	virtual axi_if axi_vif;
 	`uvm_component_utils(axi_driver);
 
 	function new(string name="axi_driver", uvm_component parent=null);
@@ -8,6 +9,8 @@ class axi_driver extends uvm_driver#(axi_seq_item);
 	function void build_phase(uvm_phase phase);
 		super.build_phase(phase);
 		`uvm_info(get_full_name(), "INSIDE DRIVER BUILD PHASE", UVM_MEDIUM);
+		if (!uvm_config_db#(virtual axi_if) :: get(this, "", "vif", axi_vif))
+		       `uvm_fatal(get_type_name(), "NOT SET AT TOP LEVEL");	       
 	endfunction
 	
 	function void connect_phase(uvm_phase phase);

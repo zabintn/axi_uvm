@@ -19,6 +19,7 @@ class axi_env extends uvm_env;
 	function void connect_phase(uvm_phase phase); //monitor scoreboard analysis port connection here
 		super.connect_phase(phase);
 		`uvm_info(get_full_name(), "INSIDE ENVIRONMENT CONNECT PHASE", UVM_MEDIUM);
+		agt.mon.item_collect_port.connect(sb.item_collect_export);
 	endfunction
 
 	task run_phase(uvm_phase phase);
