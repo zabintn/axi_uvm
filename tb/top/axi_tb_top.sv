@@ -3,6 +3,21 @@ import uvm_pkg::*;
 import axi_test_pkg::*;
 module axi_tb_top;
 
+bit clk;
+
+int clk_frequency_mhz;
+int clk_period_ns;
+initial begin
+        if($value$plusargs("CLK_FREQUENCY=%d", clk_frequency_mhz)) begin
+                $display("Clock frequency overwritten to %0d MHz", clk_frequency_mhz);
+        end
+        
+        clk_period_ns=1000/clk_frequency_mhz;
+end
+
+
+always #(clk_period_ns/2) clk = ~clk;
+
 axi_if axi_vif(clk);
 
 initial begin

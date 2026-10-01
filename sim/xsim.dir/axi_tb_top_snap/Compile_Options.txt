@@ -1,1 +1,0 @@
-"axi_tb_top" -timescale=1ns/1ps -s "axi_tb_top_snap" -L "uvm" -debug "typical" 

@@ -1,9 +1,0 @@
-INFO: [VRFC 10-2263] Analyzing SystemVerilog file "/home/nashita/Desktop/practice/axi_uvm/rtl/apb_v3_sram.sv" into library work
-INFO: [VRFC 10-311] analyzing module apb_v3_sram
-INFO: [VRFC 10-2263] Analyzing SystemVerilog file "/home/nashita/Desktop/practice/axi_uvm/tb/pkg/axi_param_pkg.sv" into library work
-INFO: [VRFC 10-2263] Analyzing SystemVerilog file "/home/nashita/Desktop/practice/axi_uvm/tb/top/axi_interface.sv" into library work
-INFO: [VRFC 10-2263] Analyzing SystemVerilog file "/home/nashita/Desktop/practice/axi_uvm/tb/pkg/axi_agent_pkg.sv" into library work
-INFO: [VRFC 10-2263] Analyzing SystemVerilog file "/home/nashita/Desktop/practice/axi_uvm/tb/pkg/axi_env_pkg.sv" into library work
-INFO: [VRFC 10-2263] Analyzing SystemVerilog file "/home/nashita/Desktop/practice/axi_uvm/tb/pkg/axi_test_pkg.sv" into library work
-INFO: [VRFC 10-2263] Analyzing SystemVerilog file "/home/nashita/Desktop/practice/axi_uvm/tb/top/axi_tb_top.sv" into library work
-INFO: [VRFC 10-311] analyzing module axi_tb_top
