@@ -3,8 +3,10 @@ class axi_driver extends uvm_driver#(axi_seq_item);
 	`uvm_component_utils(axi_driver)
 	uvm_phase run_ph;
 	axi_seq_item aw_q[$], w_q[$], ar_q[$];
-	int outstanding_rd, outstanding_wr;
+	process chan_p;
 
+
+	int outstanding_rd, outstanding_wr;
 	function new(string name="axi_driver", uvm_component parent=null);
 		super.new(name, parent);
 	endfunction
@@ -24,28 +26,26 @@ class axi_driver extends uvm_driver#(axi_seq_item);
 	task run_phase(uvm_phase phase);
 		run_ph = phase;
 		`uvm_info(get_full_name(), "INSIDE DRIVER RUN PHASE", UVM_MEDIUM);
-		fork 
-			aw_channel;
-			w_channel;
-			ar_channel;
-			b_channel;
-			r_channel;
-		join_none
-
-		forever begin
+		assert_reset();
+		start_channels();		
+			forever begin
 			axi_seq_item item;
 			seq_item_port.get_next_item(req);
 			$cast(item, req.clone()); //store a clone of req in item before pushing
-			if(item.axi_op==0) begin
-				aw_q.push_front(item);
-				w_q.push_front(item);
-				outstanding_wr++;
+			if(item.aresetn==0) begin
+				mid_reset();
 			end
-			else begin 
-				ar_q.push_front(item);
-				outstanding_rd++;
+			else begin
+				if(item.axi_op==0) begin
+					aw_q.push_front(item);
+					w_q.push_front(item);
+					outstanding_wr++;
+				end
+				else begin	
+					ar_q.push_front(item);
+					outstanding_rd++;
+				end	
 			end
-			run_ph.raise_objection(this);
 			seq_item_port.item_done();
 		end
 	endtask
@@ -74,7 +74,6 @@ class axi_driver extends uvm_driver#(axi_seq_item);
 				`uvm_fatal("TIMEOUT", "AWREADY NOT HIGH FOR 100 CYCLES");
 
 			axi_vif.awvalid<=1'b0;
-//			run_ph.drop_objection(this);
 		end
 	
 	endtask
@@ -105,7 +104,6 @@ class axi_driver extends uvm_driver#(axi_seq_item);
 				if (!w_got_ready)
 					`uvm_fatal("TIMEOUT", "WREADY NOT HIGH FOR 100 CYCLES");
 				axi_vif.wvalid<=1'b0;
-//				run_ph.drop_objection(this);
 			end
 		end
 	endtask
@@ -135,21 +133,21 @@ class axi_driver extends uvm_driver#(axi_seq_item);
 
                         axi_vif.arvalid<=1'b0;
 
-//			run_ph.drop_objection(this);
                 end
 
         endtask
 
 	task b_channel;
-		axi_vif.bready <= 1'b1;
-	       	
+
+	       	`uvm_info("B_CHAN", $sformatf("b_channel started @%0t", $time), UVM_LOW)
+		axi_vif.bready <= 1'b1;	
 		forever begin
 			@(posedge axi_vif.clk);
 			if (axi_vif.bvalid && axi_vif.bready) begin
 				if (outstanding_wr > 0) begin
 					outstanding_wr--;
-					run_ph.drop_objection(this);
-      				end
+				end
+
       			else
         			`uvm_error("B_CHAN", "B response with no outstanding write");
     			end
@@ -157,17 +155,61 @@ class axi_driver extends uvm_driver#(axi_seq_item);
 	endtask
 	
 	task r_channel;
-			axi_vif.rready<=1'b1;
-			
+	
+	       	`uvm_info("R_CHAN", $sformatf("r_channel started @%0t", $time), UVM_LOW)
+		axi_vif.rready <= 1'b1;	
 		forever begin
 			@(posedge axi_vif.clk);
-			if (axi_vif.rvalid && axi_vif.rready)
-				outstanding_rd--;
-			if (outstanding_rd==0)
-				run_ph.drop_objection(this);
+			if (axi_vif.rvalid && axi_vif.rready && axi_vif.rlast) begin
+				if (outstanding_rd>0) begin
+					outstanding_rd--;
+				end
+				else
+					`uvm_error("R_CHAN", "R response with no outstanding read");
+			end
 		end
 	endtask
-				
+	
+	task assert_reset;	
+		`uvm_info(get_full_name(), "RESET ASSERTED", UVM_LOW);
+		axi_vif.aresetn<=0;	
+		axi_vif.awvalid<=0;
+		axi_vif.arvalid<=0;
+		axi_vif.wvalid<=0;
+		@(posedge axi_vif.clk);
+		axi_vif.aresetn<=1;
+		`uvm_info(get_full_name(), "RESET DEASSERTED", UVM_LOW);
+	endtask
+
+	task start_channels();
+		fork 
+		begin
+			chan_p=process::self();
+			fork 
+				aw_channel;
+				w_channel;
+				ar_channel;
+				b_channel;
+				r_channel;
+			join_none
+		end
+		join_none
+	endtask
+	task mid_reset;
+	wait (outstanding_wr == 0 && outstanding_rd == 0); //get rid of this and the clock line for a MID RESET TEST
+  	@(posedge axi_vif.clk);	
+		if(chan_p != null && chan_p.status() != process::FINISHED) begin
+			chan_p.kill();
+		end
+		aw_q.delete();
+		w_q.delete();
+		ar_q.delete();
+		outstanding_rd=0;
+		outstanding_wr=0;
+		assert_reset();
+		start_channels();
+	
+	endtask
 
 
 endclass

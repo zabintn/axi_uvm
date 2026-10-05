@@ -41,6 +41,7 @@ gui_sim: elaborate
 	xsim $(SNAPSHOT) -gui \
 		-testplusarg "UVM_TESTNAME=$(TEST)" \
 		-testplusarg "UVM_VERBOSITY=$(UVM_VERBOSITY)"\
+                -testplusarg "CLK_FREQUENCY=$(CLK_FREQUENCY)"\
 		-log xsim_$(TEST).log
 
 # Convenience target: does all three in order
