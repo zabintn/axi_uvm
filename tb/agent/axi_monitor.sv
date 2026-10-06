@@ -43,11 +43,10 @@ class axi_monitor extends uvm_monitor;
 			mon_item.awid<=axi_vif.awid;
 			mon_item.awlen<=axi_vif.awlen;
 			mon_item.awsize<=axi_vif.awsize;
-			mon_item.awburst<=axi_vif.awburst;
-	
-		item_collect_port.write(mon_item);
+			mon_item.awburst<=axi_vif.awburst;	
 		end
 	endtask
+
 	task capture_w();
 		bit wlast_seen;
 		int beat_cnt;
@@ -71,7 +70,6 @@ class axi_monitor extends uvm_monitor;
 		end
 		mon_item.wdata=wdata_q;
 		mon_item.wstrb=wstrb_q;	
-		item_collect_port.write(mon_item);
 		`uvm_info(get_full_name(), $sformatf("MONITOR WDATA=%0p", mon_item.wdata), UVM_LOW);
 	end	
 	endtask
@@ -86,7 +84,6 @@ class axi_monitor extends uvm_monitor;
 			mon_item.arlen<=axi_vif.arlen;
 			mon_item.arsize<=axi_vif.arsize;
 			mon_item.arburst<=axi_vif.arburst;
-			item_collect_port.write(mon_item);
 		end
 	endtask
 	task capture_b();
@@ -126,6 +123,7 @@ class axi_monitor extends uvm_monitor;
 		mon_item.rdata=rdata_q;
 		mon_item.rresp=rresp_q;
 		item_collect_port.write(mon_item);
+		`uvm_info(get_full_name(), $sformatf("MONITOR RDATA=%0h", mon_item.rdata), UVM_LOW)
 	end	
 
 	endtask

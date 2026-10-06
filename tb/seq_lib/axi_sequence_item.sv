@@ -41,11 +41,17 @@ class axi_seq_item extends uvm_sequence_item;
 					awlen inside {1, 3, 7, 15};
 				}
 	constraint size_cond {awsize <= MAX_SIZE;}
-
+	
 	constraint c_w_size {
-		wdata.size() == awlen + 1;
-		wstrb.size() == awlen + 1;
+        if (axi_op == 0) 
+		{
+		wdata.size() == awlen + 1; 
+		wstrb.size() == awlen + 1; 
 		}
+        else             
+		{ wdata.size() == 0;        
+       		wstrb.size() == 0; awlen == 0; }
+	}	
 
 	`uvm_object_utils_begin(axi_seq_item)
 	`uvm_field_int(axi_op, UVM_ALL_ON)

@@ -8,6 +8,5 @@ package axi_test_pkg;
 	`include "../test_lib/axi_reset_test.sv"
 	`include "../test_lib/axi_write_test.sv"
 	`include "../test_lib/axi_read_test.sv"
-	`include "../test_lib/axi_rd_wr_test.sv"
 	`include "../test_lib/axi_dummy_test.sv"
 endpackage

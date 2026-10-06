@@ -1,8 +1,11 @@
 class axi_write_sequence extends axi_base_sequence;
-        `uvm_object_utils(axi_test_sequence)
+        `uvm_object_utils(axi_write_sequence)
 
         rand bit [ADDR_WIDTH-1:0] awaddr;
-        function new(string name= "axi_test_sequence");
+        rand bit [LEN_WIDTH-1:0] awlen;
+        rand bit [SIZE_WIDTH-1:0] awsize;
+        rand bit [BURST_TYPE-1:0] awburst;
+        function new(string name= "axi_write_sequence");
                 super.new(name);
         endfunction
 
@@ -14,8 +17,10 @@ class axi_write_sequence extends axi_base_sequence;
 			aresetn==1;
                         axi_op ==0;
                         awaddr == local::awaddr;
+			awsize == local::awsize;
+			awlen == local::awlen;
+			awburst== local::awburst;
 			};
-			end
                 finish_item(req);
                 req.print();
         endtask
