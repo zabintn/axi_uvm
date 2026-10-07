@@ -9,5 +9,12 @@ package axi_test_pkg;
 	`include "../test_lib/axi_write_test.sv"
 	`include "../test_lib/axi_read_test.sv"
 	`include "../test_lib/axi_rd_wr_test.sv"
+	`include "../test_lib/axi_fixed_burst_write_test.sv"
+	`include "../test_lib/axi_incr_burst_write_test.sv"
+	`include "../test_lib/axi_wrap_burst_write_test.sv"
+	`include "../test_lib/axi_fixed_burst_read_test.sv"
+	`include "../test_lib/axi_incr_burst_read_test.sv"
+	`include "../test_lib/axi_wrap_burst_read_test.sv"
+	`include "../test_lib/axi_concurrency_test.sv"
 	`include "../test_lib/axi_dummy_test.sv"
 endpackage

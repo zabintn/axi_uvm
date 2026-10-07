@@ -1,11 +1,11 @@
-class axi_test_sequence extends axi_base_sequence;
-        `uvm_object_utils(axi_test_sequence)
+class axi_concurrent_sequence extends axi_base_sequence;
+        `uvm_object_utils(axi_concurrent_sequence)
 
         rand bit [ADDR_WIDTH-1:0] awaddr;
 	rand bit [LEN_WIDTH-1:0] awlen;
         rand bit [ADDR_WIDTH-1:0] araddr;
 	rand bit aresetn;
-        function new(string name= "axi_test_sequence");
+        function new(string name= "axi_concurrent_sequence");
                 super.new(name);
         endfunction
 

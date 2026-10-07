@@ -2,6 +2,7 @@ class axi_env extends uvm_env;
 	axi_scoreboard sb;
 	axi_agent agt;
 	axi_reference_model rf;
+	axi_functional_coverage fc;
 
 	`uvm_component_utils(axi_env);
 
@@ -15,6 +16,7 @@ class axi_env extends uvm_env;
 		agt=axi_agent::type_id::create("agt", this);
 		sb=axi_scoreboard::type_id::create("sb", this);
 		rf=axi_reference_model::type_id::create("rf", this);
+		fc=axi_functional_coverage::type_id::create("fc", this);
 		`uvm_info(get_full_name(), "CREATED AGENT AND SCOREBOARD", UVM_MEDIUM);
 	endfunction
 
@@ -24,6 +26,7 @@ class axi_env extends uvm_env;
 		agt.mon.item_collect_port.connect(sb.item_collect_export);
 		agt.mon.item_collect_port.connect(rf.collect_item_export);
 		rf.refmodel_collect.connect(sb.refmodel_export);
+		agt.mon.item_collect_port.connect(fc.analysis_export);
 	endfunction
 
 	task run_phase(uvm_phase phase);

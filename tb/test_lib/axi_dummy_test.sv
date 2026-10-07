@@ -1,5 +1,5 @@
 class axi_dummy_test extends axi_base_test;
-	axi_test_sequence tseq;
+	axi_concurrent_sequence tseq;
 	`uvm_component_utils(axi_dummy_test)
 
 	function new(string name="axi_dummy_test", uvm_component parent=null);
@@ -11,14 +11,14 @@ class axi_dummy_test extends axi_base_test;
 		phase.raise_objection(this);
 
   		for (int i = 0; i < 5; i++) begin
-    			tseq = axi_test_sequence::type_id::create("tseq");
+    			tseq = axi_concurrent_sequence::type_id::create("tseq");
     			tseq.awaddr = 32'h12; tseq.awlen = 8'd3; tseq.araddr = 32'h12; tseq.aresetn = 1;
     			tseq.start(env_o.agt.seqr);
   		end
 
   		repeat (20) @(posedge env_o.agt.drv.axi_vif.clk);
 
-  		tseq = axi_test_sequence::type_id::create("rst_seq");
+  		tseq = axi_concurrent_sequence::type_id::create("rst_seq");
   		tseq.aresetn = 0; tseq.awaddr = 32'h12; tseq.awlen = 8'd10; tseq.araddr = 32'h12;
   		tseq.start(env_o.agt.seqr);
 

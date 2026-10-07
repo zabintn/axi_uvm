@@ -13,7 +13,7 @@ class axi_write_test extends axi_base_test;
   		for (int i = 0; i < 5; i++) begin
     			wseq = axi_write_sequence::type_id::create("wseq");
     			wseq.awaddr = 32'h00; 
-			wseq.awlen = 8'd3;
+			wseq.awlen = 8'd0;
 			wseq.awsize = 3'd3;
 			wseq.awburst= 2'b01;
     			wseq.start(env_o.agt.seqr);

@@ -38,7 +38,7 @@ class axi_reference_model extends uvm_component;
 			if(item_q.size()>0) begin
 				ref_item=item_q.pop_front();
 				
-				if(ref_item.axi_op==1)
+				if(ref_item.axi_op==0)
 					write_addr_decode(ref_item);
 				else 
 					read_addr_decode(ref_item);
@@ -53,7 +53,7 @@ class axi_reference_model extends uvm_component;
 			exp_item.bresp=2'b11;
 		end
 		else begin		
-			exp_item.bresp=2'b11;
+			exp_item.bresp=2'b00;
 		end
 		refmodel_collect.write(exp_item);
 	endtask
@@ -67,7 +67,7 @@ class axi_reference_model extends uvm_component;
 				exp_item.rresp[i]=2'b11;
 			end
 			else begin		
-			exp_item.rresp[i]=2'b11;
+			exp_item.rresp[i]=2'b00;
 			end
 		end
 		refmodel_collect.write(exp_item);

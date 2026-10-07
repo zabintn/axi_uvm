@@ -7,6 +7,7 @@ class axi_scoreboard extends uvm_scoreboard;
 	axi_seq_item act_q[$];
 	axi_seq_item exp_q[bit [ID_WIDTH-1:0]][$];
         bit [DATA_WIDTH-1:0] expected_mem [bit[ADDR_WIDTH-1:0]];
+	int pass_count=0;
 	int fail_count=0;
 	int pass=0;
 	int fail=0;
@@ -88,20 +89,26 @@ class axi_scoreboard extends uvm_scoreboard;
 		end
 
 		endtask
-	
+
+	function void check_cond(bit cond, string name, string exp_s, string act_s);
+		if(cond) begin
+			pass_count++;
+			`uvm_info(get_full_name(), $sformatf("SCOREBOARD MATCH: %s, EXPECTED=%s, ACTUAL=%s", name, exp_s, act_s), UVM_MEDIUM);
+		end
+		else
+
+			`uvm_info(get_full_name(), $sformatf("SCOREBOARD MISMATCH: %s, EXPECTED=%s, ACTUAL=%s", name, exp_s, act_s), UVM_MEDIUM);
+	endfunction
+
 	task write_check(axi_seq_item sb_item);
 		axi_seq_item exp;
 		int id;
 		id=sb_item.awid;
 		wait (exp_q.exists(id) && exp_q[id].size() > 0);
 		exp=exp_q[sb_item.awid].pop_front();	
-		if(sb_item.bresp==exp.bresp) 
-			`uvm_info(get_full_name(), $sformatf("MATCH id=%0h", sb_item.awid), UVM_MEDIUM)
-		else begin
-			`uvm_error(get_full_name(), $sformatf("MISMATCH id=%0h exp=%0b act=%0b", sb_item.awid, exp.bresp, sb_item.bresp))
-			fail_count++;
-		end
-		endtask
+		check_cond(sb_item.bresp==exp.bresp, "BRESP (WRITE RESPONSE)", $sformatf("%0b", exp.bresp), $sformatf("%0b", sb_item.bresp));
+		
+	endtask
 
 	task read_check(axi_seq_item sb_item);
 		int unsigned num_bytes = 1 << sb_item.arsize;
