@@ -23,7 +23,6 @@ class axi_agent extends uvm_agent;
 	 function void connect_phase(uvm_phase phase);
 		 super.connect_phase(phase);
 		 drv.seq_item_port.connect(seqr.seq_item_export);
-		 //add seqr driver here
 
 		 `uvm_info(get_full_name(), "INSIDE AGENT CONNECT PHASE", UVM_MEDIUM);
 	 endfunction

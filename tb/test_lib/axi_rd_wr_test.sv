@@ -16,17 +16,17 @@ class axi_rd_wr_test extends axi_base_test;
 		wseq.awlen = 8'd3;
 		wseq.awsize=3'd3;
 		wseq.awburst=2'b01;
-    		wseq.start(env_o.agt.seqr);
+    		wseq.start(env_o.agt[0].seqr);
     		
 		rseq = axi_read_sequence::type_id::create("rseq");
     		rseq.araddr = 32'h00; 
 		rseq.arlen = 8'd3;
 		rseq.arsize=3'd3;
 		rseq.arburst=2'b01;
-		rseq.start(env_o.agt.seqr);
+		rseq.start(env_o.agt[0].seqr);
 
 
-  		repeat (20) @(posedge env_o.agt.drv.axi_vif.clk);
+  		repeat (20) @(posedge env_o.agt[0].drv.axi_vif.clk);
 
  		 `uvm_info(get_full_name(), "AFTER RUN PHASE OF WRITE TEST", UVM_LOW);
   		phase.drop_objection(this);

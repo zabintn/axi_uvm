@@ -16,11 +16,14 @@ class axi_write_test extends axi_base_test;
 			wseq.awlen = 8'd0;
 			wseq.awsize = 3'd3;
 			wseq.awburst= 2'b01;
-    			wseq.start(env_o.agt.seqr);
+    			wseq.start(env_o.agt[0].seqr);
+			`uvm_info(get_full_name(), "STARTING AGENT 0", UVM_MEDIUM)
+    			wseq.start(env_o.agt[1].seqr);
+			`uvm_info(get_full_name(), "STARTING AGENT 1", UVM_MEDIUM)
   		end
 
-  		repeat (20) @(posedge env_o.agt.drv.axi_vif.clk);
-
+  		repeat (20) @(posedge env_o.agt[0].drv.axi_vif.clk);
+  		repeat (20) @(posedge env_o.agt[1].drv.axi_vif.clk);
  		 `uvm_info(get_full_name(), "AFTER RUN PHASE OF WRITE TEST", UVM_LOW);
   		phase.drop_objection(this);
 	endtask

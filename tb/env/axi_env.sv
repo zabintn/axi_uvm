@@ -1,6 +1,6 @@
 class axi_env extends uvm_env;
 	axi_scoreboard sb;
-	axi_agent agt;
+	axi_agent agt[MASTER_NUM];
 	axi_reference_model rf;
 	axi_functional_coverage fc;
 
@@ -13,7 +13,9 @@ class axi_env extends uvm_env;
 	function void build_phase(uvm_phase phase);
 		super.build_phase(phase);
 		`uvm_info(get_full_name(), "INSIDE ENVIRONMENT BUILD PHASE", UVM_MEDIUM);
-		agt=axi_agent::type_id::create("agt", this);
+		for(int i=0; i<MASTER_NUM; i++) begin
+			agt[i]=axi_agent::type_id::create($sformatf("agt[%0h]", i), this);
+		end
 		sb=axi_scoreboard::type_id::create("sb", this);
 		rf=axi_reference_model::type_id::create("rf", this);
 		fc=axi_functional_coverage::type_id::create("fc", this);
@@ -23,10 +25,12 @@ class axi_env extends uvm_env;
 	function void connect_phase(uvm_phase phase); //monitor scoreboard analysis port connection here
 		super.connect_phase(phase);
 		`uvm_info(get_full_name(), "INSIDE ENVIRONMENT CONNECT PHASE", UVM_MEDIUM);
-		agt.mon.item_collect_port.connect(sb.item_collect_export);
-		agt.mon.item_collect_port.connect(rf.collect_item_export);
+		for(int i=0; i<MASTER_NUM; i++) begin
+			agt[i].mon.item_collect_port.connect(sb.item_collect_export);
+			agt[i].mon.item_collect_port.connect(rf.collect_item_export);
+			agt[i].mon.item_collect_port.connect(fc.analysis_export);
+		end
 		rf.refmodel_collect.connect(sb.refmodel_export);
-		agt.mon.item_collect_port.connect(fc.analysis_export);
 	endfunction
 
 	task run_phase(uvm_phase phase);

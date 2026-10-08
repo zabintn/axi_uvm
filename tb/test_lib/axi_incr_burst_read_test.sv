@@ -15,9 +15,9 @@ class axi_incr_burst_read_test extends axi_base_test;
 		rseq.arlen = 8'd2;
 		rseq.arsize = 3'd3;
 		rseq.arburst= 2'b01;
-    		rseq.start(env_o.agt.seqr);
+    		rseq.start(env_o.agt[0].seqr);
 
-  		repeat (20) @(posedge env_o.agt.drv.axi_vif.clk);
+  		repeat (20) @(posedge env_o.agt[0].drv.axi_vif.clk);
 
  		 `uvm_info(get_full_name(), "AFTER RUN PHASE OF WRITE TEST", UVM_LOW);
   		phase.drop_objection(this);

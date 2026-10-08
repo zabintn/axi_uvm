@@ -18,29 +18,33 @@ end
 
 always #(clk_period_ns/2) clk = ~clk;
 
-axi_if axi_vif(clk);
-initial begin
-  axi_vif.awready = 1;
-  axi_vif.wready  = 1;
-  axi_vif.arready = 1;
-  axi_vif.bvalid  = 0;
-  axi_vif.rvalid  = 0;
-end
+axi_if axi_vif [MASTER_NUM] (clk);
+for(genvar i=0; i<MASTER_NUM; i++) begin
+	initial begin
+		axi_vif[i].awready = 1;
+ 		axi_vif[i].wready  = 1;
+  		axi_vif[i].arready = 1;
+  		axi_vif[i].bvalid  = 0;
+  		axi_vif[i].rvalid  = 0;
+	end
 
-always @(posedge clk) begin
-  if (axi_vif.bvalid && axi_vif.bready) axi_vif.bvalid <= 0;
-  if (axi_vif.wvalid && axi_vif.wlast)  axi_vif.bvalid <= 1;
-end
+	always @(posedge clk) begin
+ 		 if (axi_vif[i].bvalid && axi_vif[i].bready) axi_vif[i].bvalid <= 0;
+  		if (axi_vif[i].wvalid && axi_vif[i].wlast)  axi_vif[i].bvalid <= 1;
+	end
 
-always @(posedge clk) begin
-  if (axi_vif.rvalid && axi_vif.rready) axi_vif.rvalid <= 0;
-  if (axi_vif.arvalid) begin
-    axi_vif.rvalid <= 1;
-    axi_vif.rlast  <= 1;
-  end
-end
-initial begin
-	uvm_config_db#(virtual axi_if) :: set(uvm_root :: get(), "uvm_test_top.env_o.agt.*", "vif", axi_vif);
+	always @(posedge clk) begin
+ 		 if (axi_vif[i].rvalid && axi_vif[i].rready) axi_vif[i].rvalid <= 0;
+  		if (axi_vif[i].arvalid) begin
+    		axi_vif[i].rvalid <= 1;
+    		axi_vif[i].rlast  <= 1;
+  		end
+	end
+	
+	
+	initial begin
+		uvm_config_db#(virtual axi_if) :: set(uvm_root :: get(), $sformatf("uvm_test_top.env_o.agt[%0d].*", i), "vif", axi_vif[i]);
+	end
 end
 
 initial begin

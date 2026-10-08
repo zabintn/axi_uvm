@@ -27,7 +27,15 @@ class axi_seq_item extends uvm_sequence_item;
 	 bit [ID_WIDTH-1:0] rid;
 	 bit [1:0] rresp[]; 
 	 bit [DATA_WIDTH-1:0] rdata[];
-	 
+
+	 bit awvalid, awready;
+	 bit wvalid, wready;
+	 bit bvalid, bready;
+	 bit arvalid, arready;
+	 bit rvalid, rready;
+
+
+
 	 localparam bit [2:0] MAX_SIZE = $clog2(DATA_WIDTH/8);
 
 	 constraint rsv_burst { awburst!= 2'b11; }

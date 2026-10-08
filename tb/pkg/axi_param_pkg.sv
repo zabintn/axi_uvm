@@ -7,5 +7,6 @@ package axi_param_pkg;
 	parameter int SIZE_WIDTH = 3;
 	parameter int BURST_TYPE = 2;
 	parameter logic [ADDR_WIDTH-1:0] ADDRESS_CEIL=32'hFFFF_FFFF;
+	parameter int MASTER_NUM=4;
 endpackage
 
